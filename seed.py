@@ -23,7 +23,7 @@ def load_users():
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
 
-        user = User(user_id=user_id,
+        user = User(user_id=user_id, #creating an instance of a row
                     age=age,
                     zipcode=zipcode)
 
@@ -44,7 +44,9 @@ def load_movies():
     for row in open("seed_data/u.item"):
         row = row.rstrip().split('|')
         movie_id = row[0]
-        title = row[1]
+        #eliminate date at end of title
+        title_temp = row[1].split("(")
+        title = title_temp[0]
         # make sure data doesn't suck
         try:
             released_at = datetime.strptime(row[2], "%d-%b-%Y")
@@ -71,7 +73,7 @@ def load_ratings():
     for row in open("seed_data/u.data"):
         row = row.rstrip().split()
         user_id = row[0] 
-        movie_id= row[1]
+        movie_id = row[1]
         score= row[2]
 
         rating = Rating(user_id=user_id,
@@ -79,10 +81,9 @@ def load_ratings():
                         score=score)
         
         db.session.add(rating)
-        print "Still looping"
-    print "Done with ratings!"
+    
     db.session.commit()
-print ""
+print "totally done"
 
 if __name__ == "__main__":
     connect_to_db(app)
