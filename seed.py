@@ -46,7 +46,7 @@ def load_movies():
         movie_id = row[0]
         #eliminate date at end of title
         title_temp = row[1].split("(")
-        title = title_temp[0]
+        title = title_temp[0].rstrip()
         # make sure data doesn't suck
         try:
             released_at = datetime.strptime(row[2], "%d-%b-%Y")
