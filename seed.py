@@ -69,17 +69,20 @@ def load_ratings():
     Rating.query.delete()
 
     for row in open("seed_data/u.data"):
-        row = row.rstrip()
-        user_id, movie_id, score, rating_id = row.split('|')
+        row = row.rstrip().split()
+        user_id = row[0] 
+        movie_id= row[1]
+        score= row[2]
 
         rating = Rating(user_id=user_id,
                         movie_id=movie_id,
                         score=score)
         
         db.session.add(rating)
-
+        print "Still looping"
+    print "Done with ratings!"
     db.session.commit()
-
+print ""
 
 if __name__ == "__main__":
     connect_to_db(app)
