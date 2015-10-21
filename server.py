@@ -2,10 +2,10 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask
+from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import connect_to_db, db, User, Rating, Movie
 
 
 app = Flask(__name__)
@@ -22,7 +22,53 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return "<html><body>Placeholder for the homepage.</body></html>"
+    return render_template("homepage.html")
+
+
+@app.route("/users")
+def user_list():
+    """Show list of users"""
+
+    users= User.query.all()
+    return render_template("user_list.html", users=users)
+
+@app.route("/show_login_form")
+def show_login_form():
+    """Shows login form"""
+    return render_template("show_login_form.html")
+
+@app.route("/verify_login")
+def verify_login():
+    """verifies if user is in the db already, if not, add user to db and add to session"""
+
+    email = request.args.get("email")
+    password = request.args.get("password")
+    
+    # check if user is in db; if not, add to db
+    try:
+        user = User.query.filter(User.email == email).one()
+    except: 
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        
+    # add user to session upon login
+    session["user"]=user.user_id
+    
+    flash("You successfully logged in!")
+    return render_template("homepage.html")
+
+@app.route("/logout")
+def logout():
+    """log out of the movie rating system"""
+    try:
+        del session["user"]
+        flash("You successfully logged out!")
+  
+    except:
+        flash("You aren't logged in!")
+    
+    return render_template("homepage.html")
 
 
 if __name__ == "__main__":
