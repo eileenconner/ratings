@@ -98,21 +98,31 @@ def show_movie_info(movie_id):
 
 @app.route("/movie_rating")
 def rate_movie():
+    """Allow user to rate movies."""
     score = request.args.get("radiorating")
-    print score
     user = session['user']
-    print user
     movie = request.args.get("movie_id")
-    print movie 
+ 
+    previous_rating = Rating.query.filter(Rating.movie_id==movie, Rating.user_id==user).first()
 
-    newrating = Rating(score=score, user_id=user, movie_id=movie)
-    db.session.add(newrating)
-    db.session.commit()
+    # check if user has already rated movie. if so, update that row.
+    if previous_rating is not None:
+        print previous_rating.score
+        previous_rating.score = score
+        print previous_rating.score
+
+        db.session.commit()
+
+    # if user has not rated movie, create new row.
+    else:
+        newrating = Rating(score=score, user_id=user, movie_id=movie)
+        db.session.add(newrating)
+        db.session.commit()
 
     flash("Thank you for your rating!")
 
+    # redirect to specific movie page
     redirect_url = "/movies/%s" % movie
-
     return redirect(redirect_url)
 
 
