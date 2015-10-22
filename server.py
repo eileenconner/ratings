@@ -30,12 +30,12 @@ def show_login_form():
     """Shows login form"""
     return render_template("show_login_form.html")
 
-@app.route("/verify_login")
+@app.route("/verify_login", methods=["POST"])
 def verify_login():
     """verifies if user is in the db already, if not, add user to db and add to session"""
 
-    email = request.args.get("email")
-    password = request.args.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
     
     # check if user is in db; if not, add to db
     try:
@@ -105,11 +105,11 @@ def rate_movie():
     movie = request.args.get("movie_id")
     print movie 
 
-    flash("Thank you for your rating!")
-
     newrating = Rating(score=score, user_id=user, movie_id=movie)
     db.session.add(newrating)
     db.session.commit()
+
+    flash("Thank you for your rating!")
 
     redirect_url = "/movies/%s" % movie
 
