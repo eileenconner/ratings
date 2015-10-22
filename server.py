@@ -56,7 +56,7 @@ def verify_login():
     session["user"]=user.user_id
     
     flash("You successfully logged in!")
-    return render_template("homepage.html")
+    return render_template("user_info.html", user=user)
 
 @app.route("/logout")
 def logout():
@@ -70,6 +70,13 @@ def logout():
     
     return render_template("homepage.html")
 
+@app.route("/users/<int:user_id>")
+def show_user_info(user_id):
+    """Display user info and list of ratings for rated movies."""
+    
+    user = User.query.get(user_id)
+    return render_template("user_info.html", user=user)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
@@ -81,4 +88,4 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     DebugToolbarExtension(app)
 
-    app.run()
+    app.run(debug=True)

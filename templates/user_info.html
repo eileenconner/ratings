@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>User email: {{ user.email }} User id: {{ user.user_id }}</h2>
+    <ul>
+          <li>
+            Age: {{ user.age }}
+          </li>
+          <li>
+            Zipcode: {{ user.zipcode }}
+          </li>
+          
+            {% for rating in user.ratings %}
+                <li>Movie: {{ rating.movie.title }} Rating: {{ rating.score }}</li>
+            {% endfor %}
+          
+
+    </ul>
+
+    <!-- #age, zipcode, list of movies with scores -->
+
+{% endblock %}
