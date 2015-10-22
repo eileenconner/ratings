@@ -2,6 +2,19 @@
 {% block content %}
 
     <h2>Movie name: {{ movie.title }} Movie id: {{ movie.movie_id }}</h2>
+
+    <form action="/movie_rating">
+      <p>Rate this movie!</p>
+      <input type="radio" name="radiorating" value= "1">1
+      <input type="radio" name="radiorating" value= "2">2
+      <input type="radio" name="radiorating" value= "3">3
+      <input type="radio" name="radiorating" value= "4">4
+      <input type="radio" name="radiorating" value= "5">5
+      <input type="hidden" name="movie_id" value="{{movie.movie_id}}">
+      <input type="submit">
+
+    </form>
+
     <ul>
           
             {% for rating in ratings %}

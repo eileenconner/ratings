@@ -96,6 +96,25 @@ def show_movie_info(movie_id):
     ratings = Rating.query.filter(Rating.movie_id == movie_id).all()
     return render_template("movie_info.html", movie=movie, ratings=ratings)
 
+@app.route("/movie_rating")
+def rate_movie():
+    score = request.args.get("radiorating")
+    print score
+    user = session['user']
+    print user
+    movie = request.args.get("movie_id")
+    print movie 
+
+    flash("Thank you for your rating!")
+
+    newrating = Rating(score=score, user_id=user, movie_id=movie)
+    db.session.add(newrating)
+    db.session.commit()
+
+    redirect_url = "/movies/%s" % movie
+
+    return redirect(redirect_url)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
