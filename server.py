@@ -24,14 +24,7 @@ def index():
 
     return render_template("homepage.html")
 
-
-@app.route("/users")
-def user_list():
-    """Show list of users"""
-
-    users= User.query.all()
-    return render_template("user_list.html", users=users)
-
+# Login routes
 @app.route("/show_login_form")
 def show_login_form():
     """Shows login form"""
@@ -70,12 +63,38 @@ def logout():
     
     return render_template("homepage.html")
 
+
+# User routes
+@app.route("/users")
+def user_list():
+    """Show list of users"""
+
+    users= User.query.all()
+    return render_template("user_list.html", users=users)
+
 @app.route("/users/<int:user_id>")
 def show_user_info(user_id):
     """Display user info and list of ratings for rated movies."""
     
     user = User.query.get(user_id)
     return render_template("user_info.html", user=user)
+
+
+#Movie routes
+@app.route("/movies")
+def movie():
+    """Show list of movies"""
+    movies = Movie.query.order_by(Movie.title).all()
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route("/movies/<int:movie_id>")
+def show_movie_info(movie_id):
+    """Display movie info and id for all movies."""
+    
+    movie = Movie.query.get(movie_id)
+    ratings = Rating.query.filter(Rating.movie_id == movie_id).all()
+    return render_template("movie_info.html", movie=movie, ratings=ratings)
 
 
 if __name__ == "__main__":
